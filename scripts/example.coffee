@@ -12,7 +12,39 @@ module.exports = (robot) ->
 
   robot.hear /debug (.*)/i, (res) ->
     console?.log(res)
-    res.send "DEBUG: #{JSON.stringify(res.match)} #{Object.keys(res)}"
+    {client, customMessage, message} = res.robot.adapter
+    {message} = res
+    {rawText, rawMessage} = message # ie "debug hi <#C0GMAU1B4> this should be a channel"
+    # Parse out all the "<#C....>" channel id strings
+    # client.getChannelByID link
+
+    # From https://github.com/slackhq/hubot-slack/blob/master/src/slack.coffee#L174
+    # channelLink = ///
+    #   <              # opening angle bracket
+    #   # ([@#!])?       # link type
+    #   \#             # Only listen to messages which contain a channel reference
+    #   ([^>|]+)       # link
+    #   (?:\|          # start of |label (optional)
+    #     ([^>]+)      # label
+    #   )?             # end of label
+    #   >              # closing angle bracket
+    # ///g
+
+    channelIds = []
+    channelRe = /<#([^>|]+)>/g
+    match = null
+    while ((match = channelRe.exec(rawText)) isnt null)
+      channelIds.push(match[1])
+
+    # res.send "DEBUG: #{JSON.stringify(res.match)} #{Object.keys(res)}"
+    # TODO: Join the channel so we can post a message
+    # TODO: exclude duplicate channels or if the user accidentally referenced the current channel in the text. Like asking 'Hey #ux' when in the #ux channel
+    # Join the channel and then post a message to link back
+    ts = message.id.split('.')
+    # From https://github.com/slackhq/hubot-slack/blob/master/src/slack.coffee#L286
+    # customMessage({channel: 'zphil-talking-himself', text: "mentioned in https://openstax.slack.com/archives/#{message.room}/p#{ts[0]}#{ts[1]}"})
+    for channel in channelIds
+      customMessage({channel, text: "this channel was mentioned in https://openstax.slack.com/archives/#{message.room}/p#{ts[0]}#{ts[1]}"})
 
   # robot.hear /badger/i, (res) ->
   #   res.send "Badgers? BADGERS? WE DON'T NEED NO STINKIN BADGERS"
