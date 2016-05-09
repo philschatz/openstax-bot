@@ -10,7 +10,7 @@
 
 module.exports = (robot) ->
 
-  robot.hear /debug (.*)/i, (res) ->
+  robot.hear /debug/i, (res) ->
     console?.log(res)
     {client, customMessage, message} = res.robot.adapter
     {message} = res
