@@ -10,6 +10,10 @@
 
 module.exports = (robot) ->
 
+  robot.hear /debug (.*)/i, (res) ->
+    console?.log(res)
+    res.send "DEBUG: #{JSON.stringify(res.match)} #{Object.keys(res)}"
+
   # robot.hear /badger/i, (res) ->
   #   res.send "Badgers? BADGERS? WE DON'T NEED NO STINKIN BADGERS"
   #
