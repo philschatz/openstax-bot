@@ -61,13 +61,13 @@ module.exports = (robot) ->
     console.log 'res.robot.adapter======='
     console.log(Object.keys(res.robot.adapter))
 
-    console.log client._send
-    console.log client.self._send
-    console.log client.self._client._send
-    console.log client.ws._send
-    console.log res.robot.adapter._send
+    # console.log client._send
+    #console.log client.self._send
+    # console.log client.self._client._send
+    #console.log client.ws._send
+    #console.log res.robot.adapter._send
 
-    # client.send({name: 'link', timestamp: message.id, channel: rawMessage.channel, type: 'reaction_added'})
+    client._send({name: 'link', timestamp: message.id, channel: rawMessage.channel, type: 'reaction_added'})
 
   # robot.hear /badger/i, (res) ->
   #   res.send "Badgers? BADGERS? WE DON'T NEED NO STINKIN BADGERS"
