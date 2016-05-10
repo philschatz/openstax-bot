@@ -67,7 +67,11 @@ module.exports = (robot) ->
     #console.log client.ws._send
     #console.log res.robot.adapter._send
 
-    console.log client._send({name: 'link', timestamp: message.id, channel: rawMessage.channel, type: 'reaction_added'})
+    console.log client._send {name: 'link', timestamp: message.id, channel: rawMessage.channel, type: 'reaction_added'}, (err, val) ->
+      console.log 'reaction response'
+      console.log err
+      console.log val
+
 
   # robot.hear /badger/i, (res) ->
   #   res.send "Badgers? BADGERS? WE DON'T NEED NO STINKIN BADGERS"
