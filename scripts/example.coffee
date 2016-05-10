@@ -46,32 +46,15 @@ module.exports = (robot) ->
     linkTs = message.id.split('.')
     # From https://github.com/slackhq/hubot-slack/blob/master/src/slack.coffee#L286
     # customMessage({channel: 'zphil-talking-himself', text: "mentioned in https://openstax.slack.com/archives/#{message.room}/p#{linkTs[0]}#{linkTs[1]}"})
-    # for channel in channelIds
-    #   customMessage({channel, text: "this channel was mentioned in https://openstax.slack.com/archives/#{message.room}/p#{linkTs[0]}#{linkTs[1]}"})
+    for channel in channelIds
+      customMessage({channel, text: "this channel was mentioned in https://openstax.slack.com/archives/#{message.room}/p#{linkTs[0]}#{linkTs[1]}"})
 
-    # client.reactions.add({name: 'link', timestamp: message.id})
-    console.log 'client======='
-    console.log(Object.keys(client))
-    console.log 'client.self======='
-    console.log(Object.keys(client.self))
-    console.log 'client.self._client======='
-    console.log(Object.keys(client.self._client))
-    console.log 'client.ws======='
-    console.log(Object.keys(client.ws))
-    console.log 'res.robot.adapter======='
-    console.log(Object.keys(res.robot.adapter))
-
-    # console.log client._send
-    #console.log client.self._send
-    # console.log client.self._client._send
-    #console.log client.ws._send
-    #console.log res.robot.adapter._send
-
-    console.log client._send
-    console.log client._send {name: 'link', timestamp: message.id, channel: rawMessage.channel, type: 'reaction_added'}, (err, val) ->
-      console.log 'reaction response'
-      console.log err
-      console.log val
+    # TODO: Send a reaction once the links are created. This requires an update to hubot-slack to use the new slack-client package.
+    # Alternatively, there's https://github.com/18F/hubot-slack-github-issues and https://github.com/slackhq/hubot-slack/pull/271
+    # console.log client._send {name: 'link', timestamp: message.id, channel: rawMessage.channel, type: 'reaction_added'}, (err, val) ->
+    #   console.log 'reaction response'
+    #   console.log err
+    #   console.log val
 
 
   # robot.hear /badger/i, (res) ->
