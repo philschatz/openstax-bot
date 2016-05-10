@@ -50,7 +50,7 @@ module.exports = (robot) ->
       customMessage({channel, text: "this channel was mentioned in https://openstax.slack.com/archives/#{message.room}/p#{linkTs[0]}#{linkTs[1]}"})
 
     # client.reactions.add({name: 'link', timestamp: message.id})
-    client.send({name: 'link', timestamp: message.id, channel: rawMessage.channel, type: 'reaction_added' /*RTM_API_EVENTS.REACTION.ADDED*/})
+    client.send({name: 'link', timestamp: message.id, channel: rawMessage.channel, type: 'reaction_added'})
 
   # robot.hear /badger/i, (res) ->
   #   res.send "Badgers? BADGERS? WE DON'T NEED NO STINKIN BADGERS"
