@@ -54,10 +54,18 @@ module.exports = (robot) ->
     console.log(Object.keys(client))
     console.log 'client.self======='
     console.log(Object.keys(client.self))
+    console.log 'client.self._client======='
+    console.log(Object.keys(client.self._client))
     console.log 'client.ws======='
     console.log(Object.keys(client.ws))
     console.log 'res.robot.adapter======='
     console.log(Object.keys(res.robot.adapter))
+
+    console.log client._send
+    console.log client.self._send
+    console.log client.self._client._send
+    console.log client.ws._send
+    console.log res.robot.adapter._send
 
     # client.send({name: 'link', timestamp: message.id, channel: rawMessage.channel, type: 'reaction_added'})
 
