@@ -8,6 +8,8 @@
 #
 #   These are from the scripting documentation: https://github.com/github/hubot/blob/master/docs/scripting.md
 
+# {RTM_EVENTS} = require 'slack-client'
+
 module.exports = (robot) ->
 
   robot.hear /debug/i, (res) ->
@@ -39,12 +41,16 @@ module.exports = (robot) ->
     # res.send "DEBUG: #{JSON.stringify(res.match)} #{Object.keys(res)}"
     # TODO: Join the channel so we can post a message
     # TODO: exclude duplicate channels or if the user accidentally referenced the current channel in the text. Like asking 'Hey #ux' when in the #ux channel
+
     # Join the channel and then post a message to link back
-    ts = message.id.split('.')
+    linkTs = message.id.split('.')
     # From https://github.com/slackhq/hubot-slack/blob/master/src/slack.coffee#L286
-    # customMessage({channel: 'zphil-talking-himself', text: "mentioned in https://openstax.slack.com/archives/#{message.room}/p#{ts[0]}#{ts[1]}"})
+    # customMessage({channel: 'zphil-talking-himself', text: "mentioned in https://openstax.slack.com/archives/#{message.room}/p#{linkTs[0]}#{linkTs[1]}"})
     for channel in channelIds
-      customMessage({channel, text: "this channel was mentioned in https://openstax.slack.com/archives/#{message.room}/p#{ts[0]}#{ts[1]}"})
+      customMessage({channel, text: "this channel was mentioned in https://openstax.slack.com/archives/#{message.room}/p#{linkTs[0]}#{linkTs[1]}"})
+
+    # client.reactions.add({name: 'link', timestamp: message.id})
+    client.send({name: 'link', timestamp: message.id, channel: rawMessage.channel, type: 'reaction_added' /*RTM_API_EVENTS.REACTION.ADDED*/})
 
   # robot.hear /badger/i, (res) ->
   #   res.send "Badgers? BADGERS? WE DON'T NEED NO STINKIN BADGERS"
