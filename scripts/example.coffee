@@ -67,6 +67,7 @@ module.exports = (robot) ->
     #console.log client.ws._send
     #console.log res.robot.adapter._send
 
+    console.log client._send
     console.log client._send {name: 'link', timestamp: message.id, channel: rawMessage.channel, type: 'reaction_added'}, (err, val) ->
       console.log 'reaction response'
       console.log err
