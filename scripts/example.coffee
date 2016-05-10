@@ -52,6 +52,10 @@ module.exports = (robot) ->
     # client.reactions.add({name: 'link', timestamp: message.id})
     console.log 'client======='
     console.log(Object.keys(client))
+    console.log 'client.self======='
+    console.log(Object.keys(client.self))
+    console.log 'client.ws======='
+    console.log(Object.keys(client.ws))
     console.log 'res.robot.adapter======='
     console.log(Object.keys(res.robot.adapter))
 
