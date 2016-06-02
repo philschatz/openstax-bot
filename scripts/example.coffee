@@ -20,11 +20,12 @@ module.exports = (robot) ->
     # Parse out all the "<#C....>" channel id strings
     # client.getChannelByID link
 
-    console.log res.message
+    # console.log res.message
     console.log 'phil-client'
     console.log client
-    console.log 'phil-res-robot'
-    console.log res.robot
+    # console.log client._client.channels
+    # console.log 'phil-res-robot'
+    # console.log res.robot
 
     # From https://github.com/slackhq/hubot-slack/blob/master/src/slack.coffee#L174
     # channelLink = ///
