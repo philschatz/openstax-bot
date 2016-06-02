@@ -22,7 +22,7 @@ module.exports = (robot) ->
 
     # console.log res.message
     console.log 'phil-client'
-    console.log Object.keys(client)
+    console.log Object.keys(client.channels)
     # console.log client._client.channels
     # console.log 'phil-res-robot'
     # console.log res.robot
