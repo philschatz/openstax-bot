@@ -12,13 +12,19 @@
 
 module.exports = (robot) ->
 
-  robot.hear /debug/i, (res) ->
-    console?.log(res)
+  robot.hear /#([a-zA-Z])+/i, (res) ->
+  # robot.hear /#([a-zA-Z])+/i, (res) ->
     {client, customMessage, message} = res.robot.adapter
     {message} = res
     {rawText, rawMessage} = message # ie "debug hi <#C0GMAU1B4> this should be a channel"
     # Parse out all the "<#C....>" channel id strings
     # client.getChannelByID link
+
+    console.log res.message
+    console.log 'phil-client'
+    console.log client
+    console.log 'phil-res-robot'
+    console.log res.robot
 
     # From https://github.com/slackhq/hubot-slack/blob/master/src/slack.coffee#L174
     # channelLink = ///
