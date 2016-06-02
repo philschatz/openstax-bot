@@ -12,7 +12,7 @@
 
 module.exports = (robot) ->
 
-  robot.hear /#([a-zA-Z])+/i, (res) ->
+  robot.hear /<#([a-zA-Z0-9])+/i, (res) ->
   # robot.hear /#([a-zA-Z])+/i, (res) ->
     {client, customMessage, message} = res.robot.adapter
     {message} = res
@@ -22,7 +22,8 @@ module.exports = (robot) ->
 
     # console.log res.message
     console.log 'phil-client'
-    console.log Object.keys(client.channels)
+    someKey = Object.keys(client.channels)[0]
+    console.log Object.keys(client.channels[someKey])
     # console.log client._client.channels
     # console.log 'phil-res-robot'
     # console.log res.robot
