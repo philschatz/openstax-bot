@@ -25,8 +25,8 @@ module.exports = (robot) ->
     someKey = Object.keys(client.channels)[0]
     console.log Object.keys(client.channels[someKey])
     for channelName in Object.keys(client.channels)
-      {is_archived, is_member} = client.channels[channelName]
-      if is_member and not is_general
+      {is_archived, is_member, is_general} = client.channels[channelName]
+      if is_member # and not is_general
         console.log 'Is subscribed to', channelName
 
     # console.log client._client.channels
