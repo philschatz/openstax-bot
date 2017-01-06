@@ -21,7 +21,7 @@ module.exports = (robot) ->
     # client.getChannelByID link
 
     # console.log res.message
-    console.log 'phil-client'
+    console.log 'heard-a-message:', rawText
     someKey = Object.keys(client.channels)[0]
     # console.log Object.keys(client.channels[someKey])
     channelId = null
