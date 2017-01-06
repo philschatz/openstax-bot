@@ -13,7 +13,8 @@
 module.exports = (robot) ->
 
   # Example: <#C0MUF76KC|channel-name>
-  robot.hear /<#([^>|]+\|[^>]+)>/g, (res) ->
+  # /<#([^>|]+)\|([^>]+)>/g
+  robot.hear /<#/g, (res) ->
   # robot.hear /#([a-zA-Z])+/i, (res) ->
     {client, customMessage, message} = res.robot.adapter
     {message} = res
