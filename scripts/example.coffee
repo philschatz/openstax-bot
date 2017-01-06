@@ -12,7 +12,7 @@
 
 module.exports = (robot) ->
 
-  robot.hear /<#([^>|]+)>/g, (res) ->
+  robot.hear /debug/, (res) ->
   # robot.hear /#([a-zA-Z])+/i, (res) ->
     {client, customMessage, message} = res.robot.adapter
     {message} = res
