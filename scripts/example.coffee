@@ -58,6 +58,7 @@ module.exports = (robot) ->
     while ((match = channelRe.exec(rawText)) isnt null)
       channelIds.push(match[1])
 
+    console.log "Found channelIds to post to: #{JSON.stringify(channelIds)}"
     # res.send "DEBUG: #{JSON.stringify(res.match)} #{Object.keys(res)}"
     # TODO: Join the channel so we can post a message
     # TODO: exclude duplicate channels or if the user accidentally referenced the current channel in the text. Like asking 'Hey #ux' when in the #ux channel
