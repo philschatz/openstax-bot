@@ -66,7 +66,7 @@ module.exports = (robot) ->
       channelIds.push(match[1])
 
     console.log "Found channelIds to post to: #{JSON.stringify(channelIds)}"
-    # console.log "client-fields: #{Object.keys(client)}"
+    console.log "client-fields: #{Object.keys(client)}"
     # res.send "DEBUG: #{JSON.stringify(res.match)} #{Object.keys(res)}"
     # TODO: Join the channel so we can post a message
     # TODO: exclude duplicate channels or if the user accidentally referenced the current channel in the text. Like asking 'Hey #ux' when in the #ux channel
@@ -82,7 +82,7 @@ module.exports = (robot) ->
       #   console.log("sendingmessageto ##{name} from #{message.room}")
         # customMessage({channel, text: "this channel was mentioned in https://openstax.slack.com/archives/#{message.room}/p#{linkTs[0]}#{linkTs[1]}"})
         # From https://slackapi.github.io/hubot-slack/basic_usage#general-web-api-patterns
-      client.chat.postMessage(channelId, "this channel was mentioned in https://openstax.slack.com/archives/#{message.room}/p#{linkTs[0]}#{linkTs[1]}", {as_user: true})
+      robot.adapter.client.chat.postMessage(channelId, "this channel was mentioned in https://openstax.slack.com/archives/#{message.room}/p#{linkTs[0]}#{linkTs[1]}", {as_user: true})
       # else
       #   console.log("ask-someone-to-have-staxbot-join ##{name}")
 
