@@ -27,14 +27,14 @@ module.exports = (robot) ->
     someKey = Object.keys(client.channels)[0]
     # console.log Object.keys(client.channels[someKey])
     channelId = null
-    for channelId in Object.keys(client.channels)
-      {name, is_archived, is_member, is_general} = client.channels[channelId]
-      # if is_member # and not is_general
-      #   console.log 'Is subscribed to', name
-      unless is_member
-        console.log 'Is NOT subscribed to', name
+    # for channelId in Object.keys(client.channels)
+    #   {name, is_archived, is_member, is_general} = client.channels[channelId]
+    #   # if is_member # and not is_general
+    #   #   console.log 'Is subscribed to', name
+    #   unless is_member
+    #     console.log 'Is NOT subscribed to', name
 
-    console.log client.channels[channelId]
+    # console.log client.channels[channelId]
 
     # console.log client._client.channels
     # console.log 'phil-res-robot'
@@ -69,6 +69,7 @@ module.exports = (robot) ->
     for channel in channelIds
       {name, is_member} = client.channels[channelId]
       if is_member
+        console.log("sendingmessageto ##{name} from #{message.room}")
         customMessage({channel, text: "this channel was mentioned in https://openstax.slack.com/archives/#{message.room}/p#{linkTs[0]}#{linkTs[1]}"})
       else
         console.log("ask-someone-to-have-staxbot-join ##{name}")
