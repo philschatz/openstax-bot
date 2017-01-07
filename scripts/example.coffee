@@ -87,7 +87,9 @@ module.exports = (robot) ->
       if channelId != message.room
         # From https://slackapi.github.io/hubot-slack/basic_usage#general-web-api-patterns
         roomName = robot.adapter.client.rtm.dataStore.getChannelById(message.room).name
-        robot.adapter.client.web.chat.postMessage(channelId, "this channel was mentioned in https://openstax.slack.com/archives/#{roomName}/p#{linkTs[0]}#{linkTs[1]}", {as_user: true})
+        ret = robot.adapter.client.web.chat.postMessage(channelId, "this channel was mentioned in https://openstax.slack.com/archives/#{roomName}/p#{linkTs[0]}#{linkTs[1]}", {as_user: true})
+        console.log("Return value (hopefully a Promise)", ret)
+        robot.adapter.client.web.reactions.add('link', {channel: res.message.item.channel, timestamp: res.message.item.ts})
 
     # TODO: Send a reaction once the links are created. This requires an update to hubot-slack to use the new slack-client package.
     # Alternatively, there's https://github.com/18F/hubot-slack-github-issues and https://github.com/slackhq/hubot-slack/pull/271
