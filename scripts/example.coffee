@@ -83,10 +83,11 @@ module.exports = (robot) ->
       # if is_member
       #   console.log("sendingmessageto ##{name} from #{message.room}")
         # customMessage({channel, text: "this channel was mentioned in https://openstax.slack.com/archives/#{message.room}/p#{linkTs[0]}#{linkTs[1]}"})
+
+      if channelId !== message.room
         # From https://slackapi.github.io/hubot-slack/basic_usage#general-web-api-patterns
-      robot.adapter.client.web.chat.postMessage(channelId, "this channel was mentioned in https://openstax.slack.com/archives/#{message.room}/p#{linkTs[0]}#{linkTs[1]}", {as_user: true})
-      # else
-      #   console.log("ask-someone-to-have-staxbot-join ##{name}")
+        roomName = robot.adapter.client.rtm.dataStore.getChannelById(message.room).name
+        robot.adapter.client.web.chat.postMessage(channelId, "this channel was mentioned in https://openstax.slack.com/archives/#{roomName}/p#{linkTs[0]}#{linkTs[1]}", {as_user: true})
 
     # TODO: Send a reaction once the links are created. This requires an update to hubot-slack to use the new slack-client package.
     # Alternatively, there's https://github.com/18F/hubot-slack-github-issues and https://github.com/slackhq/hubot-slack/pull/271
