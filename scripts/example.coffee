@@ -84,7 +84,7 @@ module.exports = (robot) ->
       #   console.log("sendingmessageto ##{name} from #{message.room}")
         # customMessage({channel, text: "this channel was mentioned in https://openstax.slack.com/archives/#{message.room}/p#{linkTs[0]}#{linkTs[1]}"})
 
-      if channelId !== message.room
+      if channelId != message.room
         # From https://slackapi.github.io/hubot-slack/basic_usage#general-web-api-patterns
         roomName = robot.adapter.client.rtm.dataStore.getChannelById(message.room).name
         robot.adapter.client.web.chat.postMessage(channelId, "this channel was mentioned in https://openstax.slack.com/archives/#{roomName}/p#{linkTs[0]}#{linkTs[1]}", {as_user: true})
