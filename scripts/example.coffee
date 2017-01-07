@@ -41,7 +41,7 @@ module.exports = (robot) ->
     # console.log res.robot
 
     # From https://github.com/slackhq/hubot-slack/blob/master/src/slack.coffee#L174
-    # channelLink = ///
+    # channelLinkRe = ///
     #   <              # opening angle bracket
     #   # ([@#!])?       # link type
     #   \#             # Only listen to messages which contain a channel reference
@@ -53,7 +53,8 @@ module.exports = (robot) ->
     # ///g
 
     channelIds = []
-    channelRe = /<#([^>|]+)>/g
+    # channelRe = /<#([^>|]+)>/g
+    channelRe = /<#([^>|]+)\|[^>]+>/g
     match = null
     while ((match = channelRe.exec(rawText)) isnt null)
       channelIds.push(match[1])
