@@ -68,7 +68,7 @@ module.exports = (robot) ->
     linkTs = message.id.split('.')
     # From https://github.com/slackhq/hubot-slack/blob/master/src/slack.coffee#L286
     # customMessage({channel: 'zphil-talking-himself', text: "mentioned in https://openstax.slack.com/archives/#{message.room}/p#{linkTs[0]}#{linkTs[1]}"})
-    for channel in channelIds
+    for channelId in channelIds
       {name, is_member} = client.channels[channelId]
       if is_member
         console.log("sendingmessageto ##{name} from #{message.room}")
