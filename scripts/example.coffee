@@ -70,7 +70,9 @@ module.exports = (robot) ->
       {name, is_member} = client.channels[channelId]
       if is_member
         console.log("sendingmessageto ##{name} from #{message.room}")
-        customMessage({channel, text: "this channel was mentioned in https://openstax.slack.com/archives/#{message.room}/p#{linkTs[0]}#{linkTs[1]}"})
+        # customMessage({channel, text: "this channel was mentioned in https://openstax.slack.com/archives/#{message.room}/p#{linkTs[0]}#{linkTs[1]}"})
+        # From https://slackapi.github.io/hubot-slack/basic_usage#general-web-api-patterns
+        client.chat.postMessage(channelId, "this channel was mentioned in https://openstax.slack.com/archives/#{message.room}/p#{linkTs[0]}#{linkTs[1]}", {as_user: true})
       else
         console.log("ask-someone-to-have-staxbot-join ##{name}")
 
