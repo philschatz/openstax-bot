@@ -24,6 +24,7 @@ module.exports = (robot) ->
     {client, customMessage, message} = res.robot.adapter
     {message} = res
     rawText = res.message.text
+    console.log 'robot.adapter.client=', Object.keys(robot.adapter.client)
     console.log 'res=', Object.keys(res)
     console.log 'res.message=', Object.keys(res.message)
     # {rawText, rawMessage} = message # ie "debug hi <#C0GMAU1B4> this should be a channel"
