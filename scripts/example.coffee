@@ -102,7 +102,7 @@ module.exports = (robot) ->
           robot.adapter.client.web.reactions.add('x', {channel: res.message.room, timestamp: res.message.id})
 
           channelName = robot.adapter.client.rtm.dataStore.getChannelById(channelId).name
-          robot.adapter.client.web.chat.postMessage(helpChannelId, "@here: It seems that I cannot post a message to #{channelName}. Can someone please type `/join @staxbot ##{channelName}`? and then add the following message manually? " + linkMessage, {as_user: true}).then(null, console.error)
+          robot.adapter.client.web.chat.postMessage(helpChannelId, "@here: It seems that I cannot post a message to #{channelName}. Can someone please type `/invite @staxbot ##{channelName}`? and then add the following message manually?\n\n" + linkMessage, {as_user: true}).then(null, console.error)
 
 
         robot.adapter.client.web.chat.postMessage(channelId, linkMessage, {as_user: true}).then(postResolved, postFailed)
