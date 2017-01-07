@@ -12,7 +12,7 @@
 
 module.exports = (robot) ->
 
-  {client} = res.robot.adapter
+  {client} = robot.adapter
 
   # Bypass the formatter
   client.format = {
