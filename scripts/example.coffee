@@ -18,14 +18,13 @@ module.exports = (robot) ->
   # robot.hear /#([a-zA-Z])+/i, (res) ->
     {client, customMessage, message} = res.robot.adapter
     {message} = res
-    {rawText, rawMessage} = message # ie "debug hi <#C0GMAU1B4> this should be a channel"
+    rawText = res.message.text
+    # {rawText, rawMessage} = message # ie "debug hi <#C0GMAU1B4> this should be a channel"
     # Parse out all the "<#C....>" channel id strings
     # client.getChannelByID link
 
     # console.log res.message
     console.log 'heard-a-message:', rawText
-    someKey = Object.keys(client.channels)[0]
-    # console.log Object.keys(client.channels[someKey])
     channelId = null
     # for channelId in Object.keys(client.channels)
     #   {name, is_archived, is_member, is_general} = client.channels[channelId]
