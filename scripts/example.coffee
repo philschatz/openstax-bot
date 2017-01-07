@@ -15,9 +15,7 @@ module.exports = (robot) ->
   {client} = robot.adapter
 
   # Bypass the formatter
-  client.format = {
-    incoming: (msg) -> msg
-  }
+  client.format.links = (msg) -> msg
 
   # Example: <#C0MUF76KC|channel-name>
   # /<#([^>|]+)\|([^>]+)>/g
