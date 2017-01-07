@@ -24,7 +24,8 @@ module.exports = (robot) ->
     {client, customMessage, message} = res.robot.adapter
     {message} = res
     rawText = res.message.text
-    console.log 'robot.adapter.client=', Object.keys(robot.adapter.client)
+    console.log 'robot.adapter.client.web=', Object.keys(robot.adapter.client.web)
+    console.log 'robot.adapter.client.rtm=', Object.keys(robot.adapter.client.rtm)
     console.log 'res=', Object.keys(res)
     console.log 'res.message=', Object.keys(res.message)
     # {rawText, rawMessage} = message # ie "debug hi <#C0GMAU1B4> this should be a channel"
@@ -83,7 +84,7 @@ module.exports = (robot) ->
       #   console.log("sendingmessageto ##{name} from #{message.room}")
         # customMessage({channel, text: "this channel was mentioned in https://openstax.slack.com/archives/#{message.room}/p#{linkTs[0]}#{linkTs[1]}"})
         # From https://slackapi.github.io/hubot-slack/basic_usage#general-web-api-patterns
-      robot.adapter.client.chat.postMessage(channelId, "this channel was mentioned in https://openstax.slack.com/archives/#{message.room}/p#{linkTs[0]}#{linkTs[1]}", {as_user: true})
+      robot.adapter.client.web.chat.postMessage(channelId, "this channel was mentioned in https://openstax.slack.com/archives/#{message.room}/p#{linkTs[0]}#{linkTs[1]}", {as_user: true})
       # else
       #   console.log("ask-someone-to-have-staxbot-join ##{name}")
 
