@@ -66,7 +66,7 @@ module.exports = (robot) ->
       channelIds.push(match[1])
 
     console.log "Found channelIds to post to: #{JSON.stringify(channelIds)}"
-    console.log "client-fields: #{Object.keys(client)}"
+    # console.log "client-fields: #{Object.keys(client)}"
     # res.send "DEBUG: #{JSON.stringify(res.match)} #{Object.keys(res)}"
     # TODO: Join the channel so we can post a message
     # TODO: exclude duplicate channels or if the user accidentally referenced the current channel in the text. Like asking 'Hey #ux' when in the #ux channel
@@ -77,14 +77,14 @@ module.exports = (robot) ->
     # customMessage({channel: 'zphil-talking-himself', text: "mentioned in https://openstax.slack.com/archives/#{message.room}/p#{linkTs[0]}#{linkTs[1]}"})
 
     for channelId in channelIds
-      {name, is_member} = client.channels[channelId]
-      if is_member
-        console.log("sendingmessageto ##{name} from #{message.room}")
+      # {name, is_member} = client.channels[channelId]
+      # if is_member
+      #   console.log("sendingmessageto ##{name} from #{message.room}")
         # customMessage({channel, text: "this channel was mentioned in https://openstax.slack.com/archives/#{message.room}/p#{linkTs[0]}#{linkTs[1]}"})
         # From https://slackapi.github.io/hubot-slack/basic_usage#general-web-api-patterns
-        client.chat.postMessage(channelId, "this channel was mentioned in https://openstax.slack.com/archives/#{message.room}/p#{linkTs[0]}#{linkTs[1]}", {as_user: true})
-      else
-        console.log("ask-someone-to-have-staxbot-join ##{name}")
+      client.chat.postMessage(channelId, "this channel was mentioned in https://openstax.slack.com/archives/#{message.room}/p#{linkTs[0]}#{linkTs[1]}", {as_user: true})
+      # else
+      #   console.log("ask-someone-to-have-staxbot-join ##{name}")
 
     # TODO: Send a reaction once the links are created. This requires an update to hubot-slack to use the new slack-client package.
     # Alternatively, there's https://github.com/18F/hubot-slack-github-issues and https://github.com/slackhq/hubot-slack/pull/271
