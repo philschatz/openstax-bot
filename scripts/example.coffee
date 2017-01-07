@@ -66,6 +66,7 @@ module.exports = (robot) ->
       channelIds.push(match[1])
 
     console.log "Found channelIds to post to: #{JSON.stringify(channelIds)}"
+    console.log "client-fields: #{Object.keys(client)}"
     # res.send "DEBUG: #{JSON.stringify(res.match)} #{Object.keys(res)}"
     # TODO: Join the channel so we can post a message
     # TODO: exclude duplicate channels or if the user accidentally referenced the current channel in the text. Like asking 'Hey #ux' when in the #ux channel
@@ -74,6 +75,7 @@ module.exports = (robot) ->
     linkTs = message.id.split('.')
     # From https://github.com/slackhq/hubot-slack/blob/master/src/slack.coffee#L286
     # customMessage({channel: 'zphil-talking-himself', text: "mentioned in https://openstax.slack.com/archives/#{message.room}/p#{linkTs[0]}#{linkTs[1]}"})
+
     for channelId in channelIds
       {name, is_member} = client.channels[channelId]
       if is_member
