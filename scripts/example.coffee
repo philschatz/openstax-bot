@@ -78,6 +78,8 @@ module.exports = (robot) ->
     # From https://github.com/slackhq/hubot-slack/blob/master/src/slack.coffee#L286
     # customMessage({channel: 'zphil-talking-himself', text: "mentioned in https://openstax.slack.com/archives/#{message.room}/p#{linkTs[0]}#{linkTs[1]}"})
 
+    console.log('robot.adapter.client.rtm.dataStore', Object.keys(robot.adapter.client.rtm.dataStore))
+
     for channelId in channelIds
       # {name, is_member} = client.channels[channelId]
       # if is_member
@@ -87,10 +89,18 @@ module.exports = (robot) ->
       if channelId != message.room
         # From https://slackapi.github.io/hubot-slack/basic_usage#general-web-api-patterns
         roomName = robot.adapter.client.rtm.dataStore.getChannelById(message.room).name
-        robot.adapter.client.web.chat.postMessage(channelId, "this channel was mentioned in https://openstax.slack.com/archives/#{roomName}/p#{linkTs[0]}#{linkTs[1]}", {as_user: true}).then ->
-          console.log 'res.message.id=', res.message.id
+
+        postResolved = ->
           robot.adapter.client.web.reactions.add('link', {channel: res.message.room, timestamp: res.message.id}).then null, (err) ->
-            console.log(err)
+            # Remove if there was a connection error previously
+            robot.adapter.client.web.reactions.remove('x', {channel: res.message.room, timestamp: res.message.id})
+
+        postFailed = (err) ->
+          console.log(err)
+          robot.adapter.client.web.reactions.add('x', {channel: res.message.room, timestamp: res.message.id})
+
+
+        robot.adapter.client.web.chat.postMessage(channelId, "this channel was mentioned in https://openstax.slack.com/archives/#{roomName}/p#{linkTs[0]}#{linkTs[1]}", {as_user: true}).then(postResolved, postFailed)
 
     # TODO: Send a reaction once the links are created. This requires an update to hubot-slack to use the new slack-client package.
     # Alternatively, there's https://github.com/18F/hubot-slack-github-issues and https://github.com/slackhq/hubot-slack/pull/271
