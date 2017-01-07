@@ -78,7 +78,7 @@ module.exports = (robot) ->
     # From https://github.com/slackhq/hubot-slack/blob/master/src/slack.coffee#L286
     # customMessage({channel: 'zphil-talking-himself', text: "mentioned in https://openstax.slack.com/archives/#{message.room}/p#{linkTs[0]}#{linkTs[1]}"})
 
-    console.log('robot.adapter.client.rtm.dataStore', Object.keys(robot.adapter.client.rtm.dataStore))
+    console.log('robot.adapter.client.rtm.dataStore', robot.adapter.client.rtm.dataStore)
 
     for channelId in channelIds
       # {name, is_member} = client.channels[channelId]
