@@ -12,6 +12,13 @@
 
 module.exports = (robot) ->
 
+  {client} = res.robot.adapter
+
+  # Bypass the formatter
+  client.format = {
+    incoming: (msg) -> msg
+  }
+
   # Example: <#C0MUF76KC|channel-name>
   # /<#([^>|]+)\|([^>]+)>/g
   robot.hear /./, (res) ->
