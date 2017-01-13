@@ -38,7 +38,10 @@ module.exports = (robot) ->
     console.log 'heard-a-message:', rawText
     console.log 'res keys', Object.keys(res)
     console.log 'message keys', Object.keys(message)
-    console.log 'message.room', message.room
+
+    chattingIn = getChannelGroupOrDMById(message.room)
+    console.log 'chatting in ', chattingIn.getType()
+
     channelId = null
 
     # From https://github.com/slackhq/hubot-slack/blob/master/src/slack.coffee#L174
