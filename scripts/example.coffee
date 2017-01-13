@@ -73,7 +73,6 @@ module.exports = (robot) ->
       throw e
 
 
-
   # Example: <#C0MUF76KC|channel-name>
   # /<#([^>|]+)\|([^>]+)>/g
   robot.hear /./, (res) ->
