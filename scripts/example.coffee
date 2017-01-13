@@ -32,7 +32,7 @@ module.exports = (robot) ->
 
   robot.hear /staxbot _exec/, (res) ->
 
-    {rawText} = res.message
+    rawText = res.message.text
     code = rawText.substring('staxbot _exec '.length) # Strip off the 1st part of the message
     codeToExec = """
       (function(robot, res) {
@@ -55,8 +55,8 @@ module.exports = (robot) ->
     if /staxbot _exec/.test(rawText)
       console.log 'EXECINGGGGGG:', rawText
 
-      {rawText} = res.message
-      code = rawText.substring('staxbot _exec '.length) # Strip off the 1st part of the message
+      # {rawText} = res.message
+      code = rawText.subString('staxbot _exec '.length) # Strip off the 1st part of the message
       codeToExec = """
         (function(robot, res) {
           return #{code}
