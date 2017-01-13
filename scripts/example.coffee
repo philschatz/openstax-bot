@@ -33,7 +33,13 @@ module.exports = (robot) ->
   robot.hear /staxbot _exec/, (res) ->
 
     rawText = res.message.text
-    rawText = rawText.replace(/“/g, '"') # Slack converts double-quotes to this
+    # Slack converts double-quotes to this
+    rawText = rawText
+      .replace(/“/g, '"')
+      .replace(/”/g, '"')
+      .replace(/‘/g, "'")
+      .replace(/’/g, "'")
+
     code = rawText.substring('staxbot _exec '.length) # Strip off the 1st part of the message
     codeToExec = """
       (function(robot, res) {
@@ -41,8 +47,11 @@ module.exports = (robot) ->
       })
     """
 
-    resp = vm.runInThisContext(codeToExec)(robot, res)
-    res.send(JSON.stringify(resp))
+    try
+      resp = vm.runInThisContext(codeToExec)(robot, res)
+      res.send(JSON.stringify(resp))
+    catch e
+      res.send(JSON.stringify(e))
 
 
   # Example: <#C0MUF76KC|channel-name>
