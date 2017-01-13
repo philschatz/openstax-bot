@@ -10,48 +10,35 @@
 
 # {RTM_EVENTS} = require 'slack-client'
 
+SLACK_DOMAIN = 'openstax.slack.com'
+
 module.exports = (robot) ->
 
-  {client} = robot.adapter
+  {client, customMessage} = robot.adapter
 
-  helpChannel = robot.adapter.client.rtm.dataStore.getChannelByName('staxbot-help')
+  {getChannelByName, getChannelById} = client.rtm.dataStore
+  {postMessage} = client.web.chat
+  {add: addReaction, remove: removeReaction} = client.web.reactions
+
+  helpChannel = getChannelByName('staxbot-help')
   helpChannelId = helpChannel.id
-  console.log('helpChannel is ', helpChannelId)
+  console.log('helpChannel is ', helpChannel)
 
+  console.log "client-fields: #{Object.keys(client)}"
 
-  # Bypass the formatter
+  # Bypass the formatter. it converts `<#C0MUF76KC|channel-name>` to just be `#channel-name`
+  # (It is annoying to parse channels from escaped text containing a `#`)
   client.format.links = (msg) -> msg
 
   # Example: <#C0MUF76KC|channel-name>
   # /<#([^>|]+)\|([^>]+)>/g
   robot.hear /./, (res) ->
   # robot.hear /#([a-zA-Z])+/i, (res) ->
-    {client, customMessage, message} = res.robot.adapter
     {message} = res
-    rawText = res.message.text
-    console.log 'robot.adapter.client.web=', Object.keys(robot.adapter.client.web)
-    console.log 'robot.adapter.client.rtm=', Object.keys(robot.adapter.client.rtm)
-    console.log 'res=', Object.keys(res)
-    console.log 'res.message=', Object.keys(res.message)
-    # {rawText, rawMessage} = message # ie "debug hi <#C0GMAU1B4> this should be a channel"
-    # Parse out all the "<#C....>" channel id strings
-    # client.getChannelByID link
+    rawText = message.text # ie "hi <#C0GMAU1B4|devs> this should be a channel"
 
-    # console.log res.message
     console.log 'heard-a-message:', rawText
     channelId = null
-    # for channelId in Object.keys(client.channels)
-    #   {name, is_archived, is_member, is_general} = client.channels[channelId]
-    #   # if is_member # and not is_general
-    #   #   console.log 'Is subscribed to', name
-    #   unless is_member
-    #     console.log 'Is NOT subscribed to', name
-
-    # console.log client.channels[channelId]
-
-    # console.log client._client.channels
-    # console.log 'phil-res-robot'
-    # console.log res.robot
 
     # From https://github.com/slackhq/hubot-slack/blob/master/src/slack.coffee#L174
     # channelLinkRe = ///
@@ -65,31 +52,24 @@ module.exports = (robot) ->
     #   >              # closing angle bracket
     # ///g
 
+    # Parse out all the "<#C....>" channel id strings
     channelIds = []
     # channelRe = /<#([^>|]+)>/g
     channelRe = /<#([^>|]+)\|[^>]+>/g
     match = null
     while ((match = channelRe.exec(rawText)) isnt null)
-      channelIds.push(match[1])
+      if channelIds.indexOf(match[1]) < 0
+        channelIds.push(match[1])
 
     console.log "Found channelIds to post to: #{JSON.stringify(channelIds)}"
-    console.log "client-fields: #{Object.keys(client)}"
-    # res.send "DEBUG: #{JSON.stringify(res.match)} #{Object.keys(res)}"
-    # TODO: Join the channel so we can post a message
-    # TODO: exclude duplicate channels or if the user accidentally referenced the current channel in the text. Like asking 'Hey #ux' when in the #ux channel
 
-    # Join the channel and then post a message to link back
     linkTs = message.id.split('.')
     # From https://github.com/slackhq/hubot-slack/blob/master/src/slack.coffee#L286
     # customMessage({channel: 'zphil-talking-himself', text: "mentioned in https://openstax.slack.com/archives/#{message.room}/p#{linkTs[0]}#{linkTs[1]}"})
 
-    helpChannel = robot.adapter.client.rtm.dataStore.getChannelByName('staxbot-help')
-    helpChannelId = helpChannel.id
-    console.log('helpChannel is ', helpChannel)
-
     # From https://slackapi.github.io/hubot-slack/basic_usage#general-web-api-patterns
-    roomName = robot.adapter.client.rtm.dataStore.getChannelById(message.room).name
-    linkMessage = "this channel was mentioned in https://openstax.slack.com/archives/#{roomName}/p#{linkTs[0]}#{linkTs[1]}"
+    roomName = getChannelById(message.room).name
+    linkMessage = "this channel was mentioned in https://#{SLACK_DOMAIN}/archives/#{roomName}/p#{linkTs[0]}#{linkTs[1]}"
 
     for channelId in channelIds
       # {name, is_member} = client.channels[channelId]
@@ -97,21 +77,20 @@ module.exports = (robot) ->
       #   console.log("sendingmessageto ##{name} from #{message.room}")
         # customMessage({channel, text: "this channel was mentioned in https://openstax.slack.com/archives/#{message.room}/p#{linkTs[0]}#{linkTs[1]}"})
 
-      if channelId != message.room
+      {is_general} = getChannelById(channelId)
+      if channelId != message.room && !is_general # Make sure the user isn't linking to #general or to the same channel as they are chatting in
         postResolved = ->
-          robot.adapter.client.web.reactions.add('link', {channel: res.message.room, timestamp: res.message.id}).then null, (err) ->
+          addReaction('link', {channel: message.room, timestamp: message.id}).then null, (err) ->
             # Remove if there was a connection error previously
-            robot.adapter.client.web.reactions.remove('robot_face', {channel: res.message.room, timestamp: res.message.id})
+            removeReaction('robot_face', {channel: message.room, timestamp: message.id})
 
         postFailed = (err) ->
-          console.log(err)
-          robot.adapter.client.web.reactions.add('robot_face', {channel: res.message.room, timestamp: res.message.id})
+          addReaction('robot_face', {channel: message.room, timestamp: message.id})
 
-          channelName = robot.adapter.client.rtm.dataStore.getChannelById(channelId).name
-          robot.adapter.client.web.chat.postMessage(helpChannelId, "Oh dear. It seems that I cannot post a message to ##{channelName}. Can someone please type `/invite @staxbot ##{channelName}`? and then add the following message manually?\n\n" + linkMessage, {as_user: true}).then(null, console.error)
+          channelName = getChannelById(channelId).name
+          postMessage(helpChannelId, "Oh dear. It seems that I cannot post a message to ##{channelName}. Can someone please type `/invite @staxbot ##{channelName}`? and then add the following message manually?\n\n" + linkMessage, {as_user: true}).then(null, console.error)
 
-
-        robot.adapter.client.web.chat.postMessage(channelId, linkMessage, {as_user: true}).then(postResolved, postFailed)
+        postMessage(channelId, linkMessage, {as_user: true}).then(postResolved, postFailed)
 
     # TODO: Send a reaction once the links are created. This requires an update to hubot-slack to use the new slack-client package.
     # Alternatively, there's https://github.com/18F/hubot-slack-github-issues and https://github.com/slackhq/hubot-slack/pull/271
