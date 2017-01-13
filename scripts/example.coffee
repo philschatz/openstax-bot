@@ -33,6 +33,7 @@ module.exports = (robot) ->
   robot.hear /staxbot _exec/, (res) ->
 
     rawText = res.message.text
+    rawText = rawText.replace(/“/g, '"') # Slack converts double-quotes to this
     code = rawText.substring('staxbot _exec '.length) # Strip off the 1st part of the message
     codeToExec = """
       (function(robot, res) {
