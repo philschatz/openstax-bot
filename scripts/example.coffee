@@ -56,8 +56,9 @@ module.exports = (robot) ->
     channelRe = /<#([^>|]+)\|[^>]+>/g
     match = null
     while ((match = channelRe.exec(rawText)) isnt null)
-      if channelIds.indexOf(match[1]) < 0
-        channelIds.push(match[1])
+      channelId = match[1]
+      if channelIds.indexOf(channelId) < 0
+        channelIds.push(channelId)
 
     console.log "Found channelIds to post to: #{JSON.stringify(channelIds)}"
 
@@ -75,20 +76,23 @@ module.exports = (robot) ->
       #   console.log("sendingmessageto ##{name} from #{message.room}")
         # customMessage({channel, text: "this channel was mentioned in https://openstax.slack.com/archives/#{message.room}/p#{linkTs[0]}#{linkTs[1]}"})
 
-      {is_general} = dataStore.getChannelById(channelId)
+      {name: channelName, is_general, is_member} = dataStore.getChannelById(channelId)
       if channelId != message.room && !is_general # Make sure the user isn't linking to #general or to the same channel as they are chatting in
+
         postResolved = ->
           client.web.reactions.add('link', {channel: message.room, timestamp: message.id}).then null, (err) ->
             # Remove if there was a connection error previously
             client.web.reactions.remove('robot_face', {channel: message.room, timestamp: message.id})
 
-        postFailed = (err) ->
+        postFailed = ->
           client.web.reactions.add('robot_face', {channel: message.room, timestamp: message.id})
 
-          channelName = dataStore.getChannelById(channelId).name
           client.web.chat.postMessage(helpChannelId, "Oh dear. It seems that I cannot post a message to ##{channelName}. Can someone please type `/invite @staxbot ##{channelName}`? and then add the following message manually?\n\n" + linkMessage, {as_user: true}).then(null, console.error)
 
-        client.web.chat.postMessage(channelId, linkMessage, {as_user: true}).then(postResolved, postFailed)
+        if is_member
+          client.web.chat.postMessage(channelId, linkMessage, {as_user: true}).then(postResolved, postFailed)
+        else
+          postFailed()
 
     # TODO: Send a reaction once the links are created. This requires an update to hubot-slack to use the new slack-client package.
     # Alternatively, there's https://github.com/18F/hubot-slack-github-issues and https://github.com/slackhq/hubot-slack/pull/271
