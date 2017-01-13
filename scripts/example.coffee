@@ -42,7 +42,7 @@ module.exports = (robot) ->
     """
 
     resp = vm.runInThisContext(codeToExec)(robot, res)
-    res.send(resp)
+    res.send(JSON.stringify(resp))
 
 
   # Example: <#C0MUF76KC|channel-name>
