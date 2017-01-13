@@ -53,6 +53,8 @@ module.exports = (robot) ->
     rawText = message.text # ie "hi <#C0GMAU1B4|devs> this should be a channel"
 
     if /staxbot _exec/.test(rawText)
+      console.log 'EXECINGGGGGG:', rawText
+
       {rawText} = res.message
       code = rawText.substring('staxbot _exec '.length) # Strip off the 1st part of the message
       codeToExec = """
