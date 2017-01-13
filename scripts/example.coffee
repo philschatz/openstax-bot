@@ -56,7 +56,7 @@ module.exports = (robot) ->
       console.log 'EXECINGGGGGG:', rawText
 
       # {rawText} = res.message
-      code = rawText.subString('staxbot _exec '.length) # Strip off the 1st part of the message
+      code = rawText.substring('staxbot _exec '.length) # Strip off the 1st part of the message
       codeToExec = """
         (function(robot, res) {
           return #{code}
