@@ -39,7 +39,7 @@ module.exports = (robot) ->
     console.log 'res keys', Object.keys(res)
     console.log 'message keys', Object.keys(message)
 
-    chattingIn = getChannelGroupOrDMById(message.room)
+    chattingIn = dataStore.getChannelGroupOrDMById(message.room)
     console.log 'chatting in ', chattingIn.getType()
 
     channelId = null
