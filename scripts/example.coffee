@@ -85,7 +85,7 @@ module.exports = (robot) ->
 
     helpChannel = robot.adapter.client.rtm.dataStore.getChannelByName('staxbot-help')
     helpChannelId = helpChannel.id
-    console.log('helpChannel is ', helpChannelId)
+    console.log('helpChannel is ', helpChannel)
 
     # From https://slackapi.github.io/hubot-slack/basic_usage#general-web-api-patterns
     roomName = robot.adapter.client.rtm.dataStore.getChannelById(message.room).name
