@@ -64,7 +64,7 @@ module.exports = (robot) ->
 
     try
       resp = vm.runInThisContext(codeToExec)(robot, res)
-      if typeof(resp) === 'string'
+      if typeof(resp) is 'string'
         res.send(resp)
       else
         res.send(JSON.stringify(resp))
