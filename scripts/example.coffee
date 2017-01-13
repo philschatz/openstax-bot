@@ -14,6 +14,11 @@ module.exports = (robot) ->
 
   {client} = robot.adapter
 
+  helpChannel = robot.adapter.client.rtm.dataStore.getChannelByName('staxbot-help')
+  helpChannelId = helpChannel.id
+  console.log('helpChannel is ', helpChannelId)
+
+
   # Bypass the formatter
   client.format.links = (msg) -> msg
 
@@ -78,8 +83,9 @@ module.exports = (robot) ->
     # From https://github.com/slackhq/hubot-slack/blob/master/src/slack.coffee#L286
     # customMessage({channel: 'zphil-talking-himself', text: "mentioned in https://openstax.slack.com/archives/#{message.room}/p#{linkTs[0]}#{linkTs[1]}"})
 
-    helpChannelId = robot.adapter.client.rtm.dataStore.getChannelByName('staxbot-help').id
-    console.log('helpChannelId is ', helpChannelId)
+    helpChannel = robot.adapter.client.rtm.dataStore.getChannelByName('staxbot-help')
+    helpChannelId = helpChannel.id
+    console.log('helpChannel is ', helpChannelId)
 
     # From https://slackapi.github.io/hubot-slack/basic_usage#general-web-api-patterns
     roomName = robot.adapter.client.rtm.dataStore.getChannelById(message.room).name
@@ -95,14 +101,14 @@ module.exports = (robot) ->
         postResolved = ->
           robot.adapter.client.web.reactions.add('link', {channel: res.message.room, timestamp: res.message.id}).then null, (err) ->
             # Remove if there was a connection error previously
-            robot.adapter.client.web.reactions.remove('x', {channel: res.message.room, timestamp: res.message.id})
+            robot.adapter.client.web.reactions.remove('robot_face', {channel: res.message.room, timestamp: res.message.id})
 
         postFailed = (err) ->
           console.log(err)
-          robot.adapter.client.web.reactions.add('x', {channel: res.message.room, timestamp: res.message.id})
+          robot.adapter.client.web.reactions.add('robot_face', {channel: res.message.room, timestamp: res.message.id})
 
           channelName = robot.adapter.client.rtm.dataStore.getChannelById(channelId).name
-          robot.adapter.client.web.chat.postMessage(helpChannelId, "@here: It seems that I cannot post a message to #{channelName}. Can someone please type `/invite @staxbot ##{channelName}`? and then add the following message manually?\n\n" + linkMessage, {as_user: true}).then(null, console.error)
+          robot.adapter.client.web.chat.postMessage(helpChannelId, "Oh dear. It seems that I cannot post a message to ##{channelName}. Can someone please type `/invite @staxbot ##{channelName}`? and then add the following message manually?\n\n" + linkMessage, {as_user: true}).then(null, console.error)
 
 
         robot.adapter.client.web.chat.postMessage(channelId, linkMessage, {as_user: true}).then(postResolved, postFailed)
