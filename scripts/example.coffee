@@ -43,7 +43,22 @@ module.exports = (robot) ->
     code = rawText.substring('staxbot _exec '.length) # Strip off the 1st part of the message
     codeToExec = """
       (function(robot, res) {
-        return #{code}
+        function inspect(obj) {
+          var str=""
+          for(var k in obj) {
+            var value = obj[k]
+            if(typeof(value) === 'function') {
+              str += k + " = function\n"
+            } else if(typeof(value) === 'object') {
+              str += k + " = object/array\n"
+            } else {
+              str += k + " = " + value + "\n"
+            }
+          }
+          return str
+        }
+
+        return ( #{code} )
       })
     """
 
