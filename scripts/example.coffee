@@ -67,6 +67,7 @@ module.exports = (robot) ->
       res.send(JSON.stringify(resp))
     catch e
       res.send("ERROR: #{e.message}")
+      throw e
 
 
   # Example: <#C0MUF76KC|channel-name>
