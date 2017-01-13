@@ -8,9 +8,12 @@
 #
 #   These are from the scripting documentation: https://github.com/github/hubot/blob/master/docs/scripting.md
 
+vm = require('vm')
+
 # {RTM_EVENTS} = require 'slack-client'
 
 SLACK_DOMAIN = 'openstax.slack.com'
+BOT_NAME = 'staxbot' # Hubot prefixes DM's with the word `staxbot `
 
 module.exports = (robot) ->
 
@@ -26,6 +29,20 @@ module.exports = (robot) ->
   # Bypass the formatter. it converts `<#C0MUF76KC|channel-name>` to just be `#channel-name`
   # (It is annoying to parse channels from escaped text containing a `#`)
   client.format.links = (msg) -> msg
+
+  robot.hear /^staxbot _exec /, (res) ->
+
+    {rawText} = res.message
+    code = rawText.substring('staxbot _exec '.length) # Strip off the 1st part of the message
+    codeToExec = """
+      (function(robot, res) {
+        return #{code}
+      })
+    """
+
+    resp = vm.runInThisContext(codeToExec)(robot, res)
+    res.send(resp)
+
 
   # Example: <#C0MUF76KC|channel-name>
   # /<#([^>|]+)\|([^>]+)>/g
