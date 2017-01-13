@@ -36,6 +36,8 @@ module.exports = (robot) ->
     rawText = message.text # ie "hi <#C0GMAU1B4|devs> this should be a channel"
 
     console.log 'heard-a-message:', rawText
+    console.log 'res keys', Object.keys(res)
+    console.log 'message keys', Object.keys(message)
     channelId = null
 
     # From https://github.com/slackhq/hubot-slack/blob/master/src/slack.coffee#L174
