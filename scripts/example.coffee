@@ -30,7 +30,7 @@ module.exports = (robot) ->
   # (It is annoying to parse channels from escaped text containing a `#`)
   client.format.links = (msg) -> msg
 
-  robot.hear /^staxbot _exec /, (res) ->
+  robot.hear /staxbot _exec/, (res) ->
 
     {rawText} = res.message
     code = rawText.substring('staxbot _exec '.length) # Strip off the 1st part of the message
@@ -51,6 +51,20 @@ module.exports = (robot) ->
 
     {message} = res
     rawText = message.text # ie "hi <#C0GMAU1B4|devs> this should be a channel"
+
+    if /staxbot _exec/.test(rawText)
+      {rawText} = res.message
+      code = rawText.substring('staxbot _exec '.length) # Strip off the 1st part of the message
+      codeToExec = """
+        (function(robot, res) {
+          return #{code}
+        })
+      """
+
+      resp = vm.runInThisContext(codeToExec)(robot, res)
+      res.send(resp)
+      return
+
 
     console.log 'heard-a-message:', rawText
     console.log 'res keys', Object.keys(res)
