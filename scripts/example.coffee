@@ -64,7 +64,10 @@ module.exports = (robot) ->
 
     try
       resp = vm.runInThisContext(codeToExec)(robot, res)
-      res.send(JSON.stringify(resp))
+      if typeof(resp) === 'string'
+        res.send(resp)
+      else
+        res.send(JSON.stringify(resp))
     catch e
       res.send("ERROR: #{e.message}")
       throw e
