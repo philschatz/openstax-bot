@@ -16,14 +16,6 @@ module.exports = (robot) ->
 
   {client, customMessage} = robot.adapter
 
-  {getChannelByName, getChannelById} = client.rtm.dataStore
-  {postMessage} = client.web.chat
-  {add: addReaction, remove: removeReaction} = client.web.reactions
-
-  helpChannel = getChannelByName('staxbot-help')
-  helpChannelId = helpChannel.id
-  console.log('helpChannel is ', helpChannel)
-
   console.log "client-fields: #{Object.keys(client)}"
 
   # Bypass the formatter. it converts `<#C0MUF76KC|channel-name>` to just be `#channel-name`
@@ -34,6 +26,15 @@ module.exports = (robot) ->
   # /<#([^>|]+)\|([^>]+)>/g
   robot.hear /./, (res) ->
   # robot.hear /#([a-zA-Z])+/i, (res) ->
+
+    {getChannelByName, getChannelById} = client.rtm.dataStore
+    {postMessage} = client.web.chat
+    {add: addReaction, remove: removeReaction} = client.web.reactions
+
+    helpChannel = getChannelByName('staxbot-help')
+    helpChannelId = helpChannel.id
+    console.log('helpChannel is ', helpChannel)
+
     {message} = res
     rawText = message.text # ie "hi <#C0GMAU1B4|devs> this should be a channel"
 
