@@ -48,11 +48,11 @@ module.exports = (robot) ->
           for(var k in obj) {
             var value = obj[k]
             if(typeof(value) === 'function') {
-              str += k + " = function\n"
+              str += k + " = function\\n"
             } else if(typeof(value) === 'object') {
-              str += k + " = object/array\n"
+              str += k + " = object/array\\n"
             } else {
-              str += k + " = " + value + "\n"
+              str += k + " = " + value + "\\n"
             }
           }
           return str
