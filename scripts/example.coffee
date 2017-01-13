@@ -15,6 +15,11 @@ SLACK_DOMAIN = 'openstax.slack.com'
 module.exports = (robot) ->
 
   {client, customMessage} = robot.adapter
+  {dataStore} = client.rtm
+
+  helpChannel = dataStore.getChannelByName('staxbot-help')
+  helpChannelId = helpChannel.id
+  console.log('helpChannel is ', helpChannel)
 
   console.log "client-fields: #{Object.keys(client)}"
 
@@ -26,14 +31,6 @@ module.exports = (robot) ->
   # /<#([^>|]+)\|([^>]+)>/g
   robot.hear /./, (res) ->
   # robot.hear /#([a-zA-Z])+/i, (res) ->
-
-    {getChannelByName, getChannelById} = client.rtm.dataStore
-    {postMessage} = client.web.chat
-    {add: addReaction, remove: removeReaction} = client.web.reactions
-
-    helpChannel = getChannelByName('staxbot-help')
-    helpChannelId = helpChannel.id
-    console.log('helpChannel is ', helpChannel)
 
     {message} = res
     rawText = message.text # ie "hi <#C0GMAU1B4|devs> this should be a channel"
@@ -69,7 +66,7 @@ module.exports = (robot) ->
     # customMessage({channel: 'zphil-talking-himself', text: "mentioned in https://openstax.slack.com/archives/#{message.room}/p#{linkTs[0]}#{linkTs[1]}"})
 
     # From https://slackapi.github.io/hubot-slack/basic_usage#general-web-api-patterns
-    roomName = getChannelById(message.room).name
+    roomName = dataStore.getChannelById(message.room).name
     linkMessage = "this channel was mentioned in https://#{SLACK_DOMAIN}/archives/#{roomName}/p#{linkTs[0]}#{linkTs[1]}"
 
     for channelId in channelIds
@@ -78,20 +75,20 @@ module.exports = (robot) ->
       #   console.log("sendingmessageto ##{name} from #{message.room}")
         # customMessage({channel, text: "this channel was mentioned in https://openstax.slack.com/archives/#{message.room}/p#{linkTs[0]}#{linkTs[1]}"})
 
-      {is_general} = getChannelById(channelId)
+      {is_general} = dataStore.getChannelById(channelId)
       if channelId != message.room && !is_general # Make sure the user isn't linking to #general or to the same channel as they are chatting in
         postResolved = ->
-          addReaction('link', {channel: message.room, timestamp: message.id}).then null, (err) ->
+          client.web.reactions.add('link', {channel: message.room, timestamp: message.id}).then null, (err) ->
             # Remove if there was a connection error previously
-            removeReaction('robot_face', {channel: message.room, timestamp: message.id})
+            client.web.reactions.remove('robot_face', {channel: message.room, timestamp: message.id})
 
         postFailed = (err) ->
-          addReaction('robot_face', {channel: message.room, timestamp: message.id})
+          client.web.reactions.add('robot_face', {channel: message.room, timestamp: message.id})
 
-          channelName = getChannelById(channelId).name
-          postMessage(helpChannelId, "Oh dear. It seems that I cannot post a message to ##{channelName}. Can someone please type `/invite @staxbot ##{channelName}`? and then add the following message manually?\n\n" + linkMessage, {as_user: true}).then(null, console.error)
+          channelName = dataStore.getChannelById(channelId).name
+          client.web.chat.postMessage(helpChannelId, "Oh dear. It seems that I cannot post a message to ##{channelName}. Can someone please type `/invite @staxbot ##{channelName}`? and then add the following message manually?\n\n" + linkMessage, {as_user: true}).then(null, console.error)
 
-        postMessage(channelId, linkMessage, {as_user: true}).then(postResolved, postFailed)
+        client.web.chat.postMessage(channelId, linkMessage, {as_user: true}).then(postResolved, postFailed)
 
     # TODO: Send a reaction once the links are created. This requires an update to hubot-slack to use the new slack-client package.
     # Alternatively, there's https://github.com/18F/hubot-slack-github-issues and https://github.com/slackhq/hubot-slack/pull/271
