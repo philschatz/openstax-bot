@@ -51,7 +51,7 @@ module.exports = (robot) ->
       resp = vm.runInThisContext(codeToExec)(robot, res)
       res.send(JSON.stringify(resp))
     catch e
-      res.send(JSON.stringify(e.message))
+      res.send("ERROR: #{e.message}")
 
 
   # Example: <#C0MUF76KC|channel-name>
