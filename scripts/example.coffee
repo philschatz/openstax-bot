@@ -139,8 +139,8 @@ module.exports = (robot) ->
     # customMessage({channel: 'zphil-talking-himself', text: "mentioned in https://openstax.slack.com/archives/#{message.room}/p#{linkTs[0]}#{linkTs[1]}"})
 
     # From https://slackapi.github.io/hubot-slack/basic_usage#general-web-api-patterns
-    roomName = dataStore.getChannelById(message.room).name
-    linkMessage = "this channel was mentioned in https://#{SLACK_DOMAIN}/archives/#{roomName}/p#{linkTs[0]}#{linkTs[1]}"
+    # roomName = dataStore.getChannelById(message.room).name
+    linkMessage = "this channel was mentioned in https://#{SLACK_DOMAIN}/archives/#{message.room}/p#{linkTs[0]}#{linkTs[1]}"
 
     for channelId in channelIds
       # {name, is_member} = client.channels[channelId]
@@ -160,6 +160,8 @@ module.exports = (robot) ->
           client.web.reactions.add('robot_face', {channel: message.room, timestamp: message.id})
 
           client.web.chat.postMessage(helpChannelId, "Oh dear. It seems that I cannot post a message to ##{channelName}. Can someone please type `/invite @staxbot ##{channelName}`? and then add the following message manually?\n\n" + linkMessage, {as_user: true}).then(null, console.error)
+          # client.web.chat.postMessage(channelId, "Oh dear. It seems that I cannot post a message to ##{channelName}. Can you please type `/invite @staxbot ##{channelName}`? and then add the following message manually?\n\n" + linkMessage, {as_user: true}).then(null, console.error)
+          client.web.chat.postMessage('@phil', "Oh dear. It seems that I cannot post a message to ##{channelName}. Can you please type `/invite @staxbot ##{channelName}`? and then add the following message manually?\n\n" + linkMessage, {as_user: true}).then(null, console.error)
 
         if is_member
           client.web.chat.postMessage(channelId, linkMessage, {as_user: true}).then(postResolved, postFailed)
