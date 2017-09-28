@@ -139,8 +139,8 @@ module.exports = (robot) ->
     # customMessage({channel: 'zphil-talking-himself', text: "mentioned in https://openstax.slack.com/archives/#{message.room}/p#{linkTs[0]}#{linkTs[1]}"})
 
     # From https://slackapi.github.io/hubot-slack/basic_usage#general-web-api-patterns
-    # roomName = dataStore.getChannelById(message.room).name
-    linkMessage = "this channel was mentioned in https://#{SLACK_DOMAIN}/archives/#{message.room}/p#{linkTs[0]}#{linkTs[1]}"
+    roomName = dataStore.getChannelById(message.room).name
+    linkMessage = "This channel was mentioned in `##{roomName}` at https://#{SLACK_DOMAIN}/archives/#{message.room}/p#{linkTs[0]}#{linkTs[1]}"
 
     for channelId in channelIds
       # {name, is_member} = client.channels[channelId]
