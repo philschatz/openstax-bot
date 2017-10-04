@@ -100,6 +100,7 @@ module.exports = (robot) ->
     console.log 'heard-a-message:', rawText
     console.log 'res keys', Object.keys(res)
     console.log 'message keys', Object.keys(message)
+    console.log 'message.user', JSON.stringify(message.user)
 
     chattingIn = dataStore.getChannelGroupOrDMById(message.room)
     console.log 'chatting in ', chattingIn.getType()
